@@ -14,8 +14,7 @@ public class ListViewModel extends ViewModel {
     private LiveData<List<InventoryItem>> items;
 
     public ListViewModel(Context context) {
-        // Ottieni i dati dal database
-        InventoryDatabase db = InventoryDatabase.getInstance(context); // Initialize the database here
+        InventoryDatabase db = InventoryDatabase.getInstance(context);
         items = db.inventoryDao().getAllItems();
     }
 

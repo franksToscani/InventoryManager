@@ -32,6 +32,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         }
     }
 
@@ -45,6 +46,7 @@ android {
             force "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
             force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10"
             force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10"
+
         }
     }
 }
@@ -57,9 +59,12 @@ dependencies {
     implementation libs.material.v190
     implementation libs.androidx.constraintlayout.v214
     implementation libs.androidx.activity.ktx
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
 
     // Room
     implementation libs.room.runtime
+    implementation libs.androidx.recyclerview
     annotationProcessor libs.androidx.room.compiler
 
     // Lifecycle
