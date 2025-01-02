@@ -22,6 +22,8 @@ public interface InventoryDao {
     @Delete
     void deleteItem(InventoryItem item);
 
+
     @Query("SELECT * FROM inventory_items ORDER BY name ASC")
     LiveData<List<InventoryItem>> getAllItems();
+
 }

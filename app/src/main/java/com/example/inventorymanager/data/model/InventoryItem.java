@@ -3,10 +3,13 @@ package com.example.inventorymanager.data.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "inventory_items")
-public class InventoryItem {
+public class InventoryItem implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
+
     private String name;
     private int quantity;
     private String category;

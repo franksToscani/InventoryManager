@@ -1,6 +1,7 @@
 package com.example.inventorymanager;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 item1.setQuantity(5);
                 item1.setCategory("Elettronica");
 
-                InventoryItem item2 = new InventoryItem();
+                /*InventoryItem item2 = new InventoryItem();
                 item2.setName("Mouse");
                 item2.setQuantity(15);
                 item2.setCategory("Accessori");
@@ -46,13 +47,19 @@ public class MainActivity extends AppCompatActivity {
                 InventoryItem item3 = new InventoryItem();
                 item3.setName("Tastiera");
                 item3.setQuantity(10);
-                item3.setCategory("Accessori");
+                item3.setCategory("Accessori");*/
+                Log.d("MainActivity", "Inserimento articolo: " +
+                        "Name: " + item1.getName() +
+                        ", Quantity: " + item1.getQuantity() +
+                        ", Category: " + item1.getCategory());
 
                 inventoryDao.insertItem(item1);
-                inventoryDao.insertItem(item2);
-                inventoryDao.insertItem(item3);
+                //inventoryDao.insertItem(item2);
+                //inventoryDao.insertItem(item3);
+
             }
         }).start();
+
 
         // Mostra il ListFragment nel contenitore R.id.main
         if (savedInstanceState == null) {

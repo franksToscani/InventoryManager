@@ -1,5 +1,5 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -26,4 +26,13 @@
         android:layout_height="wrap_content"
         android:text="Categoria: Generica"
         android:textSize="14sp" />
+
+    <ImageButton
+        android:id="@+id/button_delete"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Elimina"
+        android:src="@drawable/ic_delete"
+        app:tint="@color/design_default_color_error" />
 </LinearLayout>
