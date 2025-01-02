@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main, new ListFragment()) // Usa l'ID 'main' del tuo layout
+                    .replace(R.id.main, new ListFragment())
                     .commit();
         }
     }

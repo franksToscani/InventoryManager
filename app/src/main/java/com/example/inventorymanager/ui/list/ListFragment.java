@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.inventorymanager.R;
+import com.example.inventorymanager.ui.additem.AddItemFragment;
 import com.example.inventorymanager.viewmodel.ListViewModel;
 import com.example.inventorymanager.viewmodel.ListViewModelFactory;
 import com.example.inventorymanager.ui.list.ItemAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ListFragment extends Fragment {
     private ItemAdapter adapter;
@@ -39,6 +41,16 @@ public class ListFragment extends Fragment {
         // Osserva i dati del ViewModel
         viewModel.getItems().observe(getViewLifecycleOwner(), items -> {
             adapter.setItems(items); // Aggiorna l'adapter con i dati
+
+            FloatingActionButton fab = view.findViewById(R.id.fab_add);
+            fab.setOnClickListener(v -> {
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main, new AddItemFragment())
+                        .addToBackStack(null)
+                        .commit();
+            });
+
         });
 
         return view;
