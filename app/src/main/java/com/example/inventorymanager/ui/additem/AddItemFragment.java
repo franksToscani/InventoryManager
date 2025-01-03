@@ -13,15 +13,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.inventorymanager.R;
+import com.example.inventorymanager.data.database.InventoryDatabase;
 import com.example.inventorymanager.data.model.InventoryItem;
-import com.example.inventorymanager.viewmodel.AddItemViewModel;
+import com.example.inventorymanager.ui.barcode.BarcodeScannerFragment;
 
 public class AddItemFragment extends Fragment {
     private EditText editTextName, editTextQuantity, editTextCategory;
-    private AddItemViewModel viewModel;
 
     @Nullable
     @Override
@@ -32,14 +31,47 @@ public class AddItemFragment extends Fragment {
         editTextQuantity = view.findViewById(R.id.edit_text_quantity);
         editTextCategory = view.findViewById(R.id.edit_text_category);
         Button buttonSave = view.findViewById(R.id.button_save);
+        Button buttonScan = view.findViewById(R.id.button_scan);
 
-        viewModel = new ViewModelProvider(this).get(AddItemViewModel.class);
-
+        // Gestisce il salvataggio dell'articolo
         buttonSave.setOnClickListener(v -> saveItem());
+
+        // Naviga al fragment di scansione
+        buttonScan.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main, new BarcodeScannerFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        // Recupero il codice scansionato e popola i campi ho avuto problemi con il codice scansionato
+        // bisognava implementare una logica per dividere il codice scansionato nei campi (Nome, Quantità, Categoria)
+        // e passare questi campi a un Bundle.
+        if (getArguments() != null) {
+            if (getArguments().containsKey("name")) {
+                String name = getArguments().getString("name");
+                Log.d("AddItemFragment", "Nome ricevuto: " + name);
+                editTextName.setText(name);
+            }
+            if (getArguments().containsKey("quantity")) {
+                String quantity = getArguments().getString("quantity");
+                Log.d("AddItemFragment", "Quantità ricevuta: " + quantity);
+                editTextQuantity.setText(quantity);
+            }
+            if (getArguments().containsKey("category")) {
+                String category = getArguments().getString("category");
+                Log.d("AddItemFragment", "Categoria ricevuta: " + category);
+                editTextCategory.setText(category);
+            }
+        }
+
+
 
         return view;
     }
 
+    // Salvataggio dell'articolo nel database locale tramite un thread separato e navigazione alla schermata precedente
     private void saveItem() {
         String name = editTextName.getText().toString().trim();
         String quantityStr = editTextQuantity.getText().toString().trim();
@@ -57,14 +89,14 @@ public class AddItemFragment extends Fragment {
         item.setQuantity(quantity);
         item.setCategory(category);
 
-        viewModel.addItem(item);
-        Toast.makeText(requireContext(), "Articolo salvato", Toast.LENGTH_SHORT).show();
+        new Thread(() -> {
+            InventoryDatabase db = InventoryDatabase.getInstance(requireContext().getApplicationContext());
+            db.inventoryDao().insertItem(item);
 
-        // Torna al fragment precedente
-        requireActivity().getSupportFragmentManager().popBackStack();
-
-        // Log per debug
-        Log.d("AddItemFragment", "Articolo salvato: " + item.getName());
-
+            requireActivity().runOnUiThread(() -> {
+                Toast.makeText(requireContext(), "Articolo aggiunto con successo!", Toast.LENGTH_SHORT).show();
+                requireActivity().getSupportFragmentManager().popBackStack();
+            });
+        }).start();
     }
 }
