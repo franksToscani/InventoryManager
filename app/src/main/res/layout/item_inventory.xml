@@ -33,6 +33,6 @@
         android:layout_height="30dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Elimina"
-        android:src="@drawable/ic_delete"
-        app:tint="@color/design_default_color_error" />
+        android:src="@drawable/ic_delete1"
+        app:tint="@android:color/holo_red_light" />
 </LinearLayout>
