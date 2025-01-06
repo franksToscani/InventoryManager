@@ -6,7 +6,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        android:scrollbars="vertical"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
@@ -14,5 +18,15 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:contentDescription="Aggiungi Articolo"
+        android:textColor="@android:color/white"
         android:src="@drawable/ic_add" />
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="Nessun articolo trovato"
+        android:textSize="16sp"
+        android:textColor="@color/gray" />
 </FrameLayout>

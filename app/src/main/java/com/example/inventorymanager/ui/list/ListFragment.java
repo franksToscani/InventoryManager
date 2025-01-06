@@ -29,6 +29,7 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+        View emptyView = view.findViewById(R.id.empty_view);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -48,7 +49,14 @@ public class ListFragment extends Fragment {
         ListViewModel viewModel = new ViewModelProvider(this, factory).get(ListViewModel.class);
 
         viewModel.getItems().observe(getViewLifecycleOwner(), items -> {
-            adapter.setItems(items);
+            if (items == null || items.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                adapter.setItems(items);
+            }
         });
 
         // Listener per cliccare sull'articolo (modifica)
