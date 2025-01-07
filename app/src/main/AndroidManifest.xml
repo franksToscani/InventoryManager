@@ -10,7 +10,8 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.InventoryManager">
+        android:theme="@style/Theme.InventoryManager"
+        android:enableOnBackInvokedCallback="true">
 
         <!-- Activity di Benvenuto (Homepage) -->
         <activity android:name=".WelcomeActivity"
@@ -23,7 +24,7 @@
 
         <!-- Activity per la gestione dell'inventario -->
         <activity android:name=".MainActivity" />
-        
+
     </application>
 
 </manifest>

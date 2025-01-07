@@ -29,8 +29,10 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
+        // Riferimenti ai CardView
         CardView startInventoryCard = findViewById(R.id.card_start_inventory);
         CardView exportDataCard = findViewById(R.id.card_export_data);
+        CardView analyticsCard = findViewById(R.id.card_analytics);
 
         // Configura il launcher per selezionare la directory
         directoryPickerLauncher = registerForActivityResult(
@@ -52,7 +54,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // Listener per "Esporta Dati dell'Inventario"
         exportDataCard.setOnClickListener(v -> {
-            // Controlla se ci sono articoli nel database con un thread separato
+            // Controlla se ci sono articoli nel database
             new Thread(() -> {
                 InventoryDatabase db = InventoryDatabase.getInstance(this);
                 List<InventoryItem> items = db.inventoryDao().getItemsForCsvExport();
@@ -69,16 +71,21 @@ public class WelcomeActivity extends AppCompatActivity {
                 });
             }).start();
         });
+
+        // Listener per "Visualizza Analisi"
+        analyticsCard.setOnClickListener(v -> {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new com.example.inventorymanager.ui.analytics.AnalyticsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     private void exportCsvToDirectory(Uri directoryUri) {
         new Thread(() -> {
             try {
-                /**
-                 * DocumentFile.fromTreeUri consente di ottenere un riferimento alla directory selezionata.
-                 * createFile permette di creare un nuovo file all'interno della directory.
-                 *                 Usa DocumentFile per creare il file all'interno della directory selezionata
-                  */
+                // Usa DocumentFile per creare il file all'interno della directory selezionata
                 DocumentFile pickedDir = DocumentFile.fromTreeUri(this, directoryUri);
                 if (pickedDir == null) {
                     runOnUiThread(() -> Toast.makeText(this, "Errore: directory non valida!", Toast.LENGTH_LONG).show());
@@ -110,7 +117,4 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }).start();
     }
-
-
-
 }
