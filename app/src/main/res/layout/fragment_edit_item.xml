@@ -22,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nome Articolo"
-            android:background="@drawable/edit_text_background"
             android:padding="12dp"
             android:inputType="text"
             android:textSize="16sp" />
@@ -44,7 +43,6 @@
             android:id="@+id/edit_text_quantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_background"
             android:hint="Quantità"
             android:padding="12dp"
             android:inputType="number"
@@ -68,7 +66,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Categoria"
-            android:background="@drawable/edit_text_background"
             android:padding="12dp"
             android:inputType="text"
             android:textSize="16sp" />

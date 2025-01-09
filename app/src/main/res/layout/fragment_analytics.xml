@@ -17,6 +17,5 @@
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/bar_chart"
         android:layout_width="match_parent"
-        android:outlineAmbientShadowColor="@color/material_dynamic_secondary90"
         android:layout_height="300dp" />
 </LinearLayout>
