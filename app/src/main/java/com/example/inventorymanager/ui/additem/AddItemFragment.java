@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.inventorymanager.R;
@@ -20,24 +21,24 @@ import com.example.inventorymanager.data.model.InventoryItem;
 import com.example.inventorymanager.ui.barcode.BarcodeScannerFragment;
 
 public class AddItemFragment extends Fragment {
-    private EditText editTextName, editTextQuantity, editTextCategory;
+    private EditText editTextName, editTextQuantity, editTextCategory, editTextEanCode;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_item, container, false);
 
+        // Inizializza i campi di input
         editTextName = view.findViewById(R.id.edit_text_name);
         editTextQuantity = view.findViewById(R.id.edit_text_quantity);
         editTextCategory = view.findViewById(R.id.edit_text_category);
-        Button buttonSave = view.findViewById(R.id.button_save);
-        Button buttonScan = view.findViewById(R.id.button_scan);
+        editTextEanCode = view.findViewById(R.id.edit_text_ean_code); // Campo per l'EAN-13
 
-        // Gestisce il salvataggio dell'articolo
-        buttonSave.setOnClickListener(v -> saveItem());
+        CardView cardSave = view.findViewById(R.id.card_save);
+        CardView cardScan = view.findViewById(R.id.card_scan);
 
-        // Naviga al fragment di scansione
-        buttonScan.setOnClickListener(v -> {
+        cardSave.setOnClickListener(v -> saveItem());
+        cardScan.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main, new BarcodeScannerFragment())
@@ -45,50 +46,57 @@ public class AddItemFragment extends Fragment {
                     .commit();
         });
 
-        // Recupero il codice scansionato e popola i campi ho avuto problemi con il codice scansionato
-        // bisognava implementare una logica per dividere il codice scansionato nei campi (Nome, Quantità, Categoria)
-        // e passare questi campi a un Bundle.
+        // Recupera i dati scansionati dal Bundle e popola i campi
         if (getArguments() != null) {
             if (getArguments().containsKey("name")) {
                 String name = getArguments().getString("name");
                 Log.d("AddItemFragment", "Nome ricevuto: " + name);
                 editTextName.setText(name);
             }
-            if (getArguments().containsKey("quantity")) {
-                String quantity = getArguments().getString("quantity");
-                Log.d("AddItemFragment", "Quantità ricevuta: " + quantity);
-                editTextQuantity.setText(quantity);
-            }
             if (getArguments().containsKey("category")) {
                 String category = getArguments().getString("category");
                 Log.d("AddItemFragment", "Categoria ricevuta: " + category);
                 editTextCategory.setText(category);
             }
+            if (getArguments().containsKey("eanCode")) {
+                float eanCode = getArguments().getFloat("eanCode");
+                Log.d("AddItemFragment", "EAN ricevuto: " + eanCode);
+                editTextEanCode.setText(String.valueOf(eanCode));
+            }
         }
-
-
 
         return view;
     }
 
-    // Salvataggio dell'articolo nel database locale tramite un thread separato e navigazione alla schermata precedente
+    // Salvataggio dell'articolo nel database locale
     private void saveItem() {
         String name = editTextName.getText().toString().trim();
         String quantityStr = editTextQuantity.getText().toString().trim();
         String category = editTextCategory.getText().toString().trim();
+        String eanCodeStr = editTextEanCode.getText().toString().trim();
 
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(quantityStr) || TextUtils.isEmpty(category)) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(quantityStr) || TextUtils.isEmpty(category) || TextUtils.isEmpty(eanCodeStr)) {
             Toast.makeText(requireContext(), "Compila tutti i campi", Toast.LENGTH_SHORT).show();
             return;
         }
 
         int quantity = Integer.parseInt(quantityStr);
+        float eanCode;
+        try {
+            eanCode = Float.parseFloat(eanCodeStr);
+        } catch (NumberFormatException e) {
+            Toast.makeText(requireContext(), "EAN non valido", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        // Crea un oggetto InventoryItem
         InventoryItem item = new InventoryItem();
         item.setName(name);
         item.setQuantity(quantity);
         item.setCategory(category);
+        item.setEanCode((long) eanCode);
 
+        // Salva l'articolo nel database in un thread separato
         new Thread(() -> {
             InventoryDatabase db = InventoryDatabase.getInstance(requireContext().getApplicationContext());
             db.inventoryDao().insertItem(item);

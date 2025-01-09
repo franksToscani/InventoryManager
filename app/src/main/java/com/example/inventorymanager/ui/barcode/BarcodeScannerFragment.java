@@ -1,5 +1,6 @@
 package com.example.inventorymanager.ui.barcode;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.journeyapps.barcodescanner.BarcodeView;
 
 public class BarcodeScannerFragment extends Fragment {
     private BarcodeView barcodeView;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
 
     @Nullable
     @Override
@@ -40,49 +42,73 @@ public class BarcodeScannerFragment extends Fragment {
                     Log.d("BarcodeScanner", "Codice scansionato: " + scannedCode);
 
                     // Passa il codice scansionato al metodo interpretScannedCode
-                    interpretScannedCode(scannedCode);
+                    boolean isValid = interpretScannedCode(scannedCode);
+                    if (isValid) {
+                        playSuccessSound();
+                    } else {
+                        playFailureSound();
+                    }
                 }
             }
         });
     }
 
-    /*Descrizione del Flusso
-Scansione del Codice a Barre poi Il BarcodeView cattura un codice a barre e chiama la callback barcodeResult.
-dopo ho fatto una Chiamata a interpretScannedCode:
-Una volta ottenuto il codice scansionato (result.getText()), interpretScannedCode  interpreta il contenuto del codice a barre.
-Navigazione a AddItemFragment:
+    private boolean interpretScannedCode(String scannedCode) {
+        Log.d("BarcodeScanner", "Codice scansionato: " + scannedCode);
 
-Il metodo interpretScannedCode:
-Divide il codice a barre nei campi (Nome, Quantità, Categoria).
-Passa questi campi a un Bundle.
-Naviga a AddItemFragment, passando i dati tramite il Bundle.*/
-    private void interpretScannedCode(String scannedCode) {
         if (scannedCode.contains(",")) {
             String[] parts = scannedCode.split(",");
             if (parts.length == 3) {
-                String name = parts[0].trim();
-                String quantityStr = parts[1].trim();
-                String category = parts[2].trim();
+                String name = parts[0].trim(); // Nome del prodotto
+                String category = parts[1].trim(); // Categoria del prodotto
+                String eanCodeStr = parts[2].trim(); // EAN come stringa
 
-                Bundle bundle = new Bundle();
-                bundle.putString("name", name);
-                bundle.putString("quantity", quantityStr);
-                bundle.putString("category", category);
+                try {
+                    // Converti EAN in float
+                    float eanCode = Float.parseFloat(eanCodeStr);
 
-                AddItemFragment fragment = new AddItemFragment();
-                fragment.setArguments(bundle);
+                    Log.d("BarcodeScanner", "Nome: " + name + ", Categoria: " + category + ", EAN: " + eanCode);
 
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                    // Passa i dati al fragment AddItemFragment tramite un Bundle
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", name);
+                    bundle.putString("category", category);
+                    bundle.putFloat("eanCode", eanCode);
+
+                    AddItemFragment fragment = new AddItemFragment();
+                    fragment.setArguments(bundle);
+
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.main, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                    return true; // Scansione valida
+                } catch (NumberFormatException e) {
+                    Log.e("BarcodeScanner", "EAN non valido: " + eanCodeStr, e);
+                    Toast.makeText(requireContext(), "EAN non valido", Toast.LENGTH_SHORT).show();
+                }
             } else {
+                Log.e("BarcodeScanner", "Formato codice a barre non valido: " + scannedCode);
                 Toast.makeText(requireContext(), "Formato codice a barre non valido", Toast.LENGTH_SHORT).show();
             }
         } else {
+            Log.e("BarcodeScanner", "Codice a barre non supportato: " + scannedCode);
             Toast.makeText(requireContext(), "Codice a barre non supportato", Toast.LENGTH_SHORT).show();
         }
+        return false;
+    }
+
+    private void playSuccessSound() {
+        MediaPlayer mediaPlayer = MediaPlayer.create(requireContext(), R.raw.scan_success);
+        mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        mediaPlayer.start();
+    }
+
+    private void playFailureSound() {
+        MediaPlayer mediaPlayer = MediaPlayer.create(requireContext(), R.raw.scan_failure);
+        mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        mediaPlayer.start();
     }
 
     @Override

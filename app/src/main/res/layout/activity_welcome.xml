@@ -2,17 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/material_dynamic_primary99"
     android:padding="16dp">
 
     <!-- Messaggio di benvenuto -->
-
-    <!-- Card per "Inizio Inventario" -->
     <TextView
         android:id="@+id/welcome_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:text="Inventory Manager!"
         android:textColor="@android:color/system_on_primary_dark"
         android:textSize="30sp"
@@ -22,6 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Card per "Inizio Inventario" -->
     <androidx.cardview.widget.CardView
         android:id="@+id/card_start_inventory"
         android:layout_width="match_parent"
@@ -79,7 +78,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_export" />
+                android:src="@drawable/ic_save" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -130,11 +129,13 @@
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_analytics">
+        app:layout_constraintTop_toBottomOf="@id/card_analytics"
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/textView"

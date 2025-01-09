@@ -14,6 +14,7 @@ import androidx.documentfile.provider.DocumentFile;
 
 import com.example.inventorymanager.data.database.InventoryDatabase;
 import com.example.inventorymanager.data.model.InventoryItem;
+import com.example.inventorymanager.ui.AnalyticsFragment;
 import com.example.inventorymanager.utils.CsvExporter;
 
 import java.io.IOException;
@@ -76,7 +77,7 @@ public class WelcomeActivity extends AppCompatActivity {
         analyticsCard.setOnClickListener(v -> {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, new com.example.inventorymanager.ui.analytics.AnalyticsFragment())
+                    .replace(R.id.fragment_container, new AnalyticsFragment())
                     .addToBackStack(null)
                     .commit();
         });
@@ -85,14 +86,14 @@ public class WelcomeActivity extends AppCompatActivity {
     private void exportCsvToDirectory(Uri directoryUri) {
         new Thread(() -> {
             try {
-                // Usa DocumentFile per creare il file all'interno della directory selezionata
+                // Uso DocumentFile per poter creare il file all'interno della directory selezionata
                 DocumentFile pickedDir = DocumentFile.fromTreeUri(this, directoryUri);
                 if (pickedDir == null) {
                     runOnUiThread(() -> Toast.makeText(this, "Errore: directory non valida!", Toast.LENGTH_LONG).show());
                     return;
                 }
 
-                // Crea il file CSV
+                // Creazione del file CSV
                 DocumentFile csvFile = pickedDir.createFile("text/csv", "inventory_data.csv");
                 if (csvFile == null) {
                     runOnUiThread(() -> Toast.makeText(this, "Errore durante la creazione del file!", Toast.LENGTH_LONG).show());
@@ -105,7 +106,7 @@ public class WelcomeActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             Toast.makeText(this, "File esportato con successo!", Toast.LENGTH_LONG).show();
 
-                            // Torna alla WelcomeActivity
+                            // per Tornare alla WelcomeActivity
                             Intent intent = new Intent(this, WelcomeActivity.class);
                             startActivity(intent);
                             finish();

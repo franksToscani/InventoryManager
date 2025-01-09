@@ -1,38 +1,71 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
-    <TextView
-        android:id="@+id/item_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nome Articolo"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/item_quantity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Quantità: 0"
-        android:textSize="16sp" />
+        <!-- Nome dell'articolo -->
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome: Laptop"
+            android:textSize="18sp"
+            android:background="@drawable/edit_text_background"
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
 
-    <TextView
-        android:id="@+id/item_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Categoria: Generica"
-        android:textSize="14sp" />
+        <!-- Categoria dell'articolo -->
+        <TextView
+            android:id="@+id/item_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Categoria: Elettronica"
+            android:background="@drawable/edit_text_background"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray" />
 
-    <ImageButton
-        android:id="@+id/button_delete"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Elimina"
-        android:src="@drawable/ic_delete1"
-        app:tint="@android:color/holo_red_light" />
-</LinearLayout>
+        <!-- Quantità dell'articolo -->
+        <TextView
+            android:id="@+id/item_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/edit_text_background"
+            android:text="Quantità: 10"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!-- Codice EAN -->
+        <TextView
+            android:id="@+id/item_ean"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/edit_text_background"
+            android:text="EAN: 1234567890123"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!-- Pulsante di eliminazione -->
+        <ImageButton
+            android:id="@+id/button_delete"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:contentDescription="Elimina"
+            android:src="@drawable/ic_delete1"
+            android:tint="@android:color/system_error_light" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

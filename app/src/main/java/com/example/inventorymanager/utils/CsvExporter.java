@@ -32,6 +32,7 @@ public class CsvExporter {
             csvContent.append(item.getName()).append(",");
             csvContent.append(item.getQuantity()).append(",");
             csvContent.append(item.getCategory()).append("\n");
+            csvContent.append(item.getEanCode()).append("\n");
         }
 
         // Scrivi i dati nello stream

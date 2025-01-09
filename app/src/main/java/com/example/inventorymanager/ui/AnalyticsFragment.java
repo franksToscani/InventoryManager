@@ -1,4 +1,4 @@
-package com.example.inventorymanager.ui.analytics;
+package com.example.inventorymanager.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -52,7 +52,7 @@ public class AnalyticsFragment extends Fragment {
                     }
 
                     BarDataSet dataSet = new BarDataSet(entries, "Quantità per Categoria");
-                    dataSet.setColor(getResources().getColor(R.color.blue)); // Colore delle barre
+                    dataSet.setColor(getResources().getColor(R.color.blue));
 
                     BarData barData = new BarData(dataSet);
                     barData.setBarWidth(0.9f); // Larghezza delle barre

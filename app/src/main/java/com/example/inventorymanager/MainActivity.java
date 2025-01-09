@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Carica il ListFragment all'avvio
+        // Caricamento del ListFragment all'avvio
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()

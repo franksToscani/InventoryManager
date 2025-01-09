@@ -13,6 +13,7 @@ public class InventoryItem implements Serializable {
     private String name;
     private int quantity;
     private String category;
+    private long eanCode = 0;
 
     // Getters e Setters
     public int getId() {
@@ -45,5 +46,13 @@ public class InventoryItem implements Serializable {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public long getEanCode() {
+        return eanCode;
+    }
+
+    public void setEanCode(long eanCode) {
+        this.eanCode = eanCode;
     }
 }

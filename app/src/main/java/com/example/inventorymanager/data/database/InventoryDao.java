@@ -33,4 +33,7 @@ public interface InventoryDao {
     // Ottiene tutti gli articoli per l'esportazione in formato CSV (non LiveData)
     @Query("SELECT * FROM inventory_items")
     List<InventoryItem> getItemsForCsvExport();
+
+    @Query("SELECT * FROM inventory_items WHERE eanCode = :eanCode")
+    InventoryItem getItemByEanCode(long eanCode);
 }
