@@ -56,12 +56,11 @@ public class NotificationUtils {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_save)  // Icona della notifica
                 .setContentTitle("Esportazione Completata")
-                .setContentText("I dati sono stati esportati con successo!")
+                .setContentText("I dati sono stati esportati nella directory android selezionata!")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSound(soundUri)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);  // Chiude la notifica al clic
-
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
             notificationManager.notify(1, builder.build());
