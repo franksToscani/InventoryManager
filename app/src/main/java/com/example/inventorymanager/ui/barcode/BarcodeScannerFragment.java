@@ -20,7 +20,7 @@ import com.journeyapps.barcodescanner.BarcodeView;
 
 public class BarcodeScannerFragment extends Fragment {
     private BarcodeView barcodeView;
-    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    //private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
 
     @Nullable
     @Override
@@ -29,9 +29,9 @@ public class BarcodeScannerFragment extends Fragment {
         barcodeView = view.findViewById(R.id.barcode_scanner);
 
         startCamera();
-
         return view;
     }
+
 
     private void startCamera() {
         barcodeView.decodeContinuous(new BarcodeCallback() {
@@ -66,8 +66,6 @@ public class BarcodeScannerFragment extends Fragment {
                 try {
                     // Converti EAN in float
                     float eanCode = Float.parseFloat(eanCodeStr);
-
-                    Log.d("BarcodeScanner", "Nome: " + name + ", Categoria: " + category + ", EAN: " + eanCode);
 
                     // Passa i dati al fragment AddItemFragment tramite un Bundle
                     Bundle bundle = new Bundle();

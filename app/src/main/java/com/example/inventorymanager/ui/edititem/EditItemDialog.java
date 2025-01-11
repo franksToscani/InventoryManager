@@ -1,49 +1,56 @@
 package com.example.inventorymanager.ui.edititem;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.inventorymanager.R;
 import com.example.inventorymanager.data.database.InventoryDatabase;
 import com.example.inventorymanager.data.model.InventoryItem;
 
-public class EditItemFragment extends Fragment {
+public class EditItemDialog extends DialogFragment {
+
     private EditText editTextName, editTextQuantity, editTextCategory;
     private InventoryItem item;
 
-    @Nullable
+    public EditItemDialog(InventoryItem item) {
+        this.item = item;
+    }
+
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_edit_item, container, false);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_item, null);
 
         editTextName = view.findViewById(R.id.edit_text_name);
         editTextQuantity = view.findViewById(R.id.edit_text_quantity);
         editTextCategory = view.findViewById(R.id.edit_text_category);
         Button buttonUpdate = view.findViewById(R.id.button_update);
 
-        if (getArguments() != null) {
-            item = (InventoryItem) getArguments().getSerializable("item");
-            if (item != null) {
-                editTextName.setText(item.getName());
-                editTextQuantity.setText(String.valueOf(item.getQuantity()));
-                editTextCategory.setText(item.getCategory());
-            }
+        // Popolamento dei campi con i dati dell'articolo
+        if (item != null) {
+            editTextName.setText(item.getName());
+            editTextQuantity.setText(String.valueOf(item.getQuantity()));
+            editTextCategory.setText(item.getCategory());
         }
 
         buttonUpdate.setOnClickListener(v -> updateItem());
-
-        return view;
+        // Costruzione della finestra di dialogo con alterDialog builder
+        return new AlertDialog.Builder(requireContext())
+                .setView(view)
+                .setTitle("Modifica Articolo selezionato")
+                .setNegativeButton("Annulla", (dialog, which) -> dismiss())
+                .create();
     }
 
     private void updateItem() {
@@ -59,17 +66,15 @@ public class EditItemFragment extends Fragment {
         item.setName(name);
         item.setQuantity(Integer.parseInt(quantityStr));
         item.setCategory(category);
-        // Log per debug
-        Log.d("EditItemFragment", "Aggiornamento articolo: " + item.getName() + ", Quantità: " + item.getQuantity() + ", Categoria: " + item.getCategory());
 
-        //aggiornamento dell'articolo nel db
+        // Aggiorna il nostro db con un new Thread
         new Thread(() -> {
             InventoryDatabase db = InventoryDatabase.getInstance(requireContext().getApplicationContext());
             db.inventoryDao().updateItem(item);
 
             requireActivity().runOnUiThread(() -> {
-                Toast.makeText(requireContext(), "Articolo aggiornato con successo:)!", Toast.LENGTH_SHORT).show();
-                requireActivity().getSupportFragmentManager().popBackStack();
+                Toast.makeText(requireContext(), "Articolo aggiornato con successo!", Toast.LENGTH_SHORT).show();
+                dismiss();  // Chiude la finestra di dialogo
             });
         }).start();
     }

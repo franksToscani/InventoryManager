@@ -1,38 +1,35 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
 
-    <!-- RecyclerView per visualizzare gli articoli -->
+    <!-- Barra di Ricerca -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="Cerca articolo" />
+
+    <!-- Lista Articoli -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="8dp"
         android:clipToPadding="false"
-        android:padding="8dp"
         android:scrollbars="vertical" />
 
-    <!-- Floating Action Button per aggiungere articoli -->
+    <!-- Pulsante Aggiungi Articolo -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:contentDescription="Aggiungi Articolo"
-        android:tint="@android:color/white"
-        android:src="@drawable/ic_add" />
-
-    <!-- TextView da mostrare quando il RecyclerView è vuoto -->
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone"
-        android:text="Nessun articolo trovato"
-        android:textSize="16sp"
-        android:textColor="@color/gray" />
-</FrameLayout>
+        android:src="@drawable/ic_add"
+        android:contentDescription="Aggiungi Articolo" />
+</LinearLayout>

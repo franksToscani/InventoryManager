@@ -1,67 +1,98 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    app:cardElevation="4dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
-
-    <LinearLayout
+    android:foreground="?attr/selectableItemBackgroundBorderless">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="8dp">
 
-        <!-- Nome dell'articolo -->
+        <!-- Nome del prodotto -->
         <TextView
             android:id="@+id/item_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nome: Laptop"
+            android:layout_alignParentStart="true"
+            android:text="Nome Prodotto"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textStyle="bold" />
 
-        <!-- Categoria dell'articolo -->
+        <!-- Categoria del prodotto -->
         <TextView
             android:id="@+id/item_category"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Categoria: Elettronica"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
-
-        <!-- Quantità dell'articolo -->
-        <TextView
-            android:id="@+id/item_quantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Quantità: 10"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
+            android:layout_below="@id/item_name"
+            android:layout_alignStart="@id/item_name"
+            android:text="Categoria"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp" />
 
         <!-- Codice EAN -->
         <TextView
             android:id="@+id/item_ean"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="EAN: 1234567890123"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
+            android:layout_below="@id/item_category"
+            android:layout_alignStart="@id/item_category"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp" />
 
-        <!-- Pulsante di eliminazione -->
+        <!-- Quantità e unità di misura -->
+        <TextView
+            android:id="@+id/item_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="89dp"
+            android:text="10"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Unità di misura -->
+        <TextView
+            android:id="@+id/item_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_quantity"
+            android:layout_alignEnd="@id/item_quantity"
+            android:text="pezzi"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp" />
+
+        <!-- Pulsante per eliminare l'articolo -->
         <ImageButton
             android:id="@+id/button_delete"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:layout_marginTop="8dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/item_unit"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Elimina"
             android:src="@drawable/ic_delete1"
-            android:tint="@android:color/system_error_light" />
-    </LinearLayout>
+            android:tint="@color/red" />
+
+        <!-- Pulsante opzioni -->
+        <ImageButton
+            android:id="@+id/button_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="7dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Opzioni"
+            android:src="@drawable/ic_option" />
+
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

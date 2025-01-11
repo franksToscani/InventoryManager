@@ -1,13 +1,15 @@
 package com.example.inventorymanager.ui.list;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,9 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.inventorymanager.R;
 import com.example.inventorymanager.data.database.InventoryDatabase;
-import com.example.inventorymanager.data.model.InventoryItem;
 import com.example.inventorymanager.ui.additem.AddItemFragment;
-import com.example.inventorymanager.ui.edititem.EditItemFragment;
 import com.example.inventorymanager.viewmodel.ListViewModel;
 import com.example.inventorymanager.viewmodel.ListViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,14 +29,43 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        View emptyView = view.findViewById(R.id.empty_view);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        SearchView searchView = view.findViewById(R.id.search_view);
+        FloatingActionButton fab = view.findViewById(R.id.fab_add);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ItemAdapter(requireContext());
         recyclerView.setAdapter(adapter);
 
-        FloatingActionButton fab = view.findViewById(R.id.fab_add);
+
+        // Inizializza il ViewModel
+        ListViewModelFactory factory = new ListViewModelFactory(requireContext());
+        ListViewModel viewModel = new ViewModelProvider(this, factory).get(ListViewModel.class);
+
+        // Osserva i dati
+        viewModel.getItems().observe(getViewLifecycleOwner(), items -> adapter.setItems(items));
+
+        // Configura il SearchView per filtrare i risultati
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterList(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterList(newText);
+                return true;
+            }
+
+            private void filterList(String query) {
+                adapter.filter(query); // Implementa il metodo filter in ItemAdapter
+            }
+        });
+
+        // Aggiungi un nuovo articolo
         fab.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -45,33 +74,7 @@ public class ListFragment extends Fragment {
                     .commit();
         });
 
-        ListViewModelFactory factory = new ListViewModelFactory(requireContext());
-        ListViewModel viewModel = new ViewModelProvider(this, factory).get(ListViewModel.class);
 
-        viewModel.getItems().observe(getViewLifecycleOwner(), items -> {
-            if (items == null || items.isEmpty()) {
-                recyclerView.setVisibility(View.GONE);
-                emptyView.setVisibility(View.VISIBLE);
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                emptyView.setVisibility(View.GONE);
-                adapter.setItems(items);
-            }
-        });
-
-        // Listener per cliccare sull'articolo (modifica)
-        adapter.setOnItemClickListener(item -> {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("item", item);
-            EditItemFragment fragment = new EditItemFragment();
-            fragment.setArguments(bundle);
-
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main, fragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
 
         // Listener per eliminare un articolo
         adapter.setOnItemDeleteListener(item -> {
@@ -89,17 +92,6 @@ public class ListFragment extends Fragment {
         });
 
         return view;
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Forziamo sto cazzo di ricaricamento dei dati ogni volta che si torna alla lista
-        ListViewModelFactory factory = new ListViewModelFactory(requireContext());
-        ListViewModel viewModel = new ViewModelProvider(this, factory).get(ListViewModel.class);
-
-        viewModel.getItems().observe(getViewLifecycleOwner(), items -> {
-            adapter.setItems(items);
-        });
     }
 
 }

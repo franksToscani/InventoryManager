@@ -34,6 +34,4 @@ public interface InventoryDao {
     @Query("SELECT * FROM inventory_items")
     List<InventoryItem> getItemsForCsvExport();
 
-    @Query("SELECT * FROM inventory_items WHERE eanCode = :eanCode")
-    InventoryItem getItemByEanCode(long eanCode);
 }
