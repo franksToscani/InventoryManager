@@ -16,6 +16,7 @@ import com.example.inventorymanager.data.database.InventoryDatabase;
 import com.example.inventorymanager.data.model.InventoryItem;
 import com.example.inventorymanager.ui.AnalyticsFragment;
 import com.example.inventorymanager.utils.CsvExporter;
+import com.example.inventorymanager.utils.NotificationUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,12 +31,44 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        // Riferimenti ai CardView
+        // Creazione del canale di notifica
+        NotificationUtils.createNotificationChannel(this);
+
+        // Collegamento a tutti i nostri pulsanti
+        setupCardListeners();
+
+        // Configurazione del selettore di directory
+        setupDirectoryPicker();
+    }
+
+    /**
+     * Configura i listener per i CardView.
+     */
+    private void setupCardListeners() {
         CardView startInventoryCard = findViewById(R.id.card_start_inventory);
         CardView exportDataCard = findViewById(R.id.card_export_data);
         CardView analyticsCard = findViewById(R.id.card_analytics);
 
-        // Configura il launcher per selezionare la directory
+        // 📦 Avvia Inventario
+        startInventoryCard.setOnClickListener(v -> {
+            startActivity(new Intent(this, MainActivity.class));
+        });
+
+        // 📤 Esporta Dati
+        exportDataCard.setOnClickListener(v -> checkAndExportData());
+
+        // 📊 Visualizza Analisi
+        analyticsCard.setOnClickListener(v -> getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new AnalyticsFragment())
+                .addToBackStack(null)
+                .commit());
+    }
+
+    /**
+     * Configura il selettore di directory per l'esportazione.
+     */
+    private void setupDirectoryPicker() {
         directoryPickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -46,57 +79,44 @@ public class WelcomeActivity extends AppCompatActivity {
                         Toast.makeText(this, "Selezione directory annullata", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-        // Listener per "Inizio Inventario"
-        startInventoryCard.setOnClickListener(v -> {
-            Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
-
-        // Listener per "Esporta Dati dell'Inventario"
-        exportDataCard.setOnClickListener(v -> {
-            // Controlla se ci sono articoli nel database
-            new Thread(() -> {
-                InventoryDatabase db = InventoryDatabase.getInstance(this);
-                List<InventoryItem> items = db.inventoryDao().getItemsForCsvExport();
-
-                runOnUiThread(() -> {
-                    if (items == null || items.isEmpty()) {
-                        Toast.makeText(this, "Non ci sono articoli nel database!", Toast.LENGTH_LONG).show();
-                    } else {
-                        // Avvia la selezione della directory
-                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        directoryPickerLauncher.launch(intent);
-                    }
-                });
-            }).start();
-        });
-
-        // Listener per "Visualizza Analisi"
-        analyticsCard.setOnClickListener(v -> {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, new AnalyticsFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
     }
 
+    /**
+     * Verifica se ci sono dati da esportare prima di avviare la selezione della directory.
+     */
+    private void checkAndExportData() {
+        new Thread(() -> {
+            InventoryDatabase db = InventoryDatabase.getInstance(this);
+            List<InventoryItem> items = db.inventoryDao().getItemsForCsvExport();
+
+            runOnUiThread(() -> {
+                if (items == null || items.isEmpty()) {
+                    Toast.makeText(this, "Non ci sono articoli nel database!", Toast.LENGTH_LONG).show();
+                } else {
+                    // 📂 Avvia la selezione della directory
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    directoryPickerLauncher.launch(intent);
+                }
+            });
+        }).start();
+    }
+
+    /**
+     * Gestisce l'esportazione dei dati in CSV nella directory selezionata.
+     */
     private void exportCsvToDirectory(Uri directoryUri) {
         new Thread(() -> {
             try {
-                // Uso DocumentFile per poter creare il file all'interno della directory selezionata
                 DocumentFile pickedDir = DocumentFile.fromTreeUri(this, directoryUri);
                 if (pickedDir == null) {
-                    runOnUiThread(() -> Toast.makeText(this, "Errore: directory non valida!", Toast.LENGTH_LONG).show());
+                    showToastOnUiThread("Errore: directory non valida!");
                     return;
                 }
 
-                // Creazione del file CSV
                 DocumentFile csvFile = pickedDir.createFile("text/csv", "inventory_data.csv");
                 if (csvFile == null) {
-                    runOnUiThread(() -> Toast.makeText(this, "Errore durante la creazione del file!", Toast.LENGTH_LONG).show());
+                    showToastOnUiThread("Errore durante la creazione del file!");
                     return;
                 }
 
@@ -105,17 +125,20 @@ public class WelcomeActivity extends AppCompatActivity {
                         CsvExporter.exportToStream(this, outputStream);
                         runOnUiThread(() -> {
                             Toast.makeText(this, "File esportato con successo!", Toast.LENGTH_LONG).show();
-
-                            // per Tornare alla WelcomeActivity
-                            Intent intent = new Intent(this, WelcomeActivity.class);
-                            startActivity(intent);
-                            finish();
+                            NotificationUtils.showExportSuccessNotification(this);
                         });
                     }
                 }
             } catch (IOException e) {
-                runOnUiThread(() -> Toast.makeText(this, "Errore durante l'esportazione: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                showToastOnUiThread("Errore durante l'esportazione: " + e.getMessage());
             }
         }).start();
+    }
+
+    /**
+     * Mostra un Toast dal thread UI.
+     */
+    private void showToastOnUiThread(String message) {
+        runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_LONG).show());
     }
 }
