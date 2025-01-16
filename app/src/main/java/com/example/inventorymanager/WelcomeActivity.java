@@ -1,5 +1,6 @@
 package com.example.inventorymanager;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -123,10 +124,32 @@ public class WelcomeActivity extends AppCompatActivity {
                 try (OutputStream outputStream = getContentResolver().openOutputStream(csvFile.getUri())) {
                     if (outputStream != null) {
                         CsvExporter.exportToStream(this, outputStream);
+
+                        // Dopo l'esportazione, svuotiamo il database
+
                         runOnUiThread(() -> {
                             Toast.makeText(this, "File esportato con successo!", Toast.LENGTH_LONG).show();
                             NotificationUtils.showExportSuccessNotification(this);
+
+                            new AlertDialog.Builder(this)
+                                    .setTitle("Conferma Eliminazione")
+                                    .setMessage("Vuoi cancellare tutti i dati dopo l'esportazione?")
+                                    .setPositiveButton("Sì", (dialog, which) -> {
+                                        // Faccio la cancellazione in un thread separato se no si blocca l'UI per colpa di Room chi non lo accetta su thread principale
+                                        new Thread(() -> {
+                                            InventoryDatabase db = InventoryDatabase.getInstance(this);
+                                            db.inventoryDao().deleteAllItems();
+
+                                            runOnUiThread(() -> Toast.makeText(this, "Database svuotato!", Toast.LENGTH_LONG).show());
+                                        }).start();
+
+                                        NotificationUtils.showExportSuccessNotification(this);
+                                    })
+                                    .setNegativeButton("No", null)
+                                    .show();
                         });
+
+
                     }
                 }
             } catch (IOException e) {

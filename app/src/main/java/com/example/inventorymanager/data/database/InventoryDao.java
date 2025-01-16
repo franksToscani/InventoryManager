@@ -26,6 +26,10 @@ public interface InventoryDao {
     @Delete
     void deleteItem(InventoryItem item);
 
+    @Query("DELETE FROM inventory_items")
+    void deleteAllItems();
+
+
     // Ottiene tutti gli articoli come LiveData
     @Query("SELECT * FROM inventory_items")
     LiveData<List<InventoryItem>> getAllItems();
