@@ -49,15 +49,15 @@ public class WelcomeActivity extends AppCompatActivity {
         CardView exportDataCard = findViewById(R.id.card_export_data);
         CardView analyticsCard = findViewById(R.id.card_analytics);
 
-        // 📦 Avvia Inventario
+        // Avvia Inventario
         startInventoryCard.setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivity.class));
         });
 
-        // 📤 Esporta Dati
+        // Esporta Dati
         exportDataCard.setOnClickListener(v -> checkAndExportData());
 
-        // 📊 Visualizza Analisi
+        // Visualizza Analisi
         analyticsCard.setOnClickListener(v -> getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, new AnalyticsFragment())
@@ -93,7 +93,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 if (items == null || items.isEmpty()) {
                     Toast.makeText(this, "Non ci sono articoli nel database!", Toast.LENGTH_LONG).show();
                 } else {
-                    // 📂 Avvia la selezione della directory
+                    // Avvia la selezione della directory
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
                     intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                     directoryPickerLauncher.launch(intent);

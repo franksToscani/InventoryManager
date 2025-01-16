@@ -9,8 +9,8 @@
     <application
         android:allowBackup="true"
         android:label="Inventory Manager"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/ic_launching"
+        android:roundIcon="@mipmap/ic_launching_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.InventoryManager"
         android:enableOnBackInvokedCallback="true">
