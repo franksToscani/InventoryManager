@@ -1,5 +1,6 @@
 package com.example.inventorymanager.ui.additem;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -103,8 +104,15 @@ public class AddItemFragment extends Fragment {
 
             requireActivity().runOnUiThread(() -> {
                 Toast.makeText(requireContext(), "Articolo aggiunto con successo!", Toast.LENGTH_SHORT).show();
+                playSuccessSound();
                 requireActivity().getSupportFragmentManager().popBackStack();
             });
         }).start();
+    }
+
+    private void playSuccessSound() {
+        MediaPlayer mediaPlayer = MediaPlayer.create(requireContext(), R.raw.scan_success);
+        mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        mediaPlayer.start();
     }
 }
