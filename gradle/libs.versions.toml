@@ -1,6 +1,6 @@
 [versions]
 activityKtx = "1.9.3"
-agp = "8.7.3"
+agp = "8.8.0"
 androidxJunit = "1.2.1"
 appcompatVersion = "1.7.0"
 constraintlayoutVersion = "2.2.0"
