@@ -23,8 +23,8 @@ import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
 
-    private List<InventoryItem> items = new ArrayList<>();
-    private List<InventoryItem> allItems = new ArrayList<>();  // Lista completa per il filtro
+    private List<InventoryItem> items = new ArrayList<>(); //Lista corrente degli articoli visibili.
+    private List<InventoryItem> allItems = new ArrayList<>();  // Lista completa degli articoli per la ricerca
     private final Context context;
     private OnItemClickListener clickListener;
     private OnItemDeleteListener deleteListener;
@@ -53,7 +53,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         this.deleteListener = listener;
     }
 
-    // Metodo per filtrare la lista
+    // Metodo per filtrare la lista ogni cambiamento di testo aggiorna la lista.
     public void filter(String query) {
         items.clear();
         if (query == null || query.isEmpty()) {

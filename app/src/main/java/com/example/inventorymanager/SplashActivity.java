@@ -14,7 +14,7 @@ public class SplashActivity extends AppCompatActivity {
 
         // Mostra lo splash screen di default di Android 12+
         try {
-            Thread.sleep(1500);  // Durata dello splash (1.5 secondi)
+            Thread.sleep(2500);  // Durata dello splash (1.5 secondi)
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

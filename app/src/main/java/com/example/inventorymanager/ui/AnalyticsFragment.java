@@ -36,19 +36,19 @@ public class AnalyticsFragment extends Fragment {
             InventoryDatabase db = InventoryDatabase.getInstance(requireContext());
             List<InventoryItem> items = db.inventoryDao().getItemsForCsvExport();
 
-            // Esegui l'aggiornamento del grafico sulla UI thread
+            // Esegui l'aggiornamento del grafico sulla UI thread(principale)
             requireActivity().runOnUiThread(() -> {
                 if (items == null || items.isEmpty()) {
                     barChart.setNoDataText("Nessun dato disponibile");
                 } else {
                     // Prepara i dati per il grafico
-                    List<BarEntry> entries = new ArrayList<>();
-                    List<String> labels = new ArrayList<>();
+                    List<BarEntry> entries = new ArrayList<>();//barEntry rappresenta i dati quantitativi per ogni articolo.
+                    List<String> labels = new ArrayList<>();//labels rappresenta le categorie degli articoli da visualizzare su XX .
 
                     for (int i = 0; i < items.size(); i++) {
                         InventoryItem item = items.get(i);
-                        entries.add(new BarEntry(i, item.getQuantity()));
-                        labels.add(item.getCategory());
+                        entries.add(new BarEntry(i, item.getQuantity())); // Valori per il grafico
+                        labels.add(item.getCategory()); // Etichette
                     }
 
                     BarDataSet dataSet = new BarDataSet(entries, "Quantità per Categoria");

@@ -61,7 +61,7 @@ public class ListFragment extends Fragment {
             }
 
             private void filterList(String query) {
-                adapter.filter(query); // Implementa il metodo filter in ItemAdapter
+                adapter.filter(query);
             }
         });
 

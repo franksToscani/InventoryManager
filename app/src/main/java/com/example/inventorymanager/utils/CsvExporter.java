@@ -13,10 +13,8 @@ public class CsvExporter {
 
     /**
      * Esporta i dati dell'inventario in uno stream specificato (es. file CSV in una directory scelta).
-     *
      * @param context      Il contesto dell'applicazione.
      * @param outputStream Lo stream in cui scrivere i dati CSV.
-     * @throws IOException Se si verifica un errore durante l'operazione di scrittura.
      */
     public static void exportToStream(Context context, OutputStream outputStream) throws IOException {
         // Ottieni il database e i dati degli articoli
